@@ -1,0 +1,70 @@
+:root {
+    --gap: 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "JetBrains Mono";
+}
+
+body {
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.btn {
+    border: none;
+    font-size: 24px;
+    padding: 10px 20px;
+    background-color: rgb(38, 36, 44);
+    color: white;
+    text-align: center;
+    box-shadow: -6px 6px grey;
+}
+
+.btn:hover {
+    cursor: grab;
+}
+
+.btn:active {
+    cursor: grabbing;
+    transform: translate(-6px, 6px);
+    box-shadow: 0 0 grey;
+}
+
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    border: 2px solid black;
+    background-color: rgb(0, 0, 0, 5%);
+    /* box-sizing: content-box; */
+}
+
+.options {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin: 20px;
+    gap: 20px;
+}
+
+#select-color {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.palette-color {
+    height: 48px;
+    width: 48px;
+    border: 1px solid grey;
+    border-radius: 6px;
+}
