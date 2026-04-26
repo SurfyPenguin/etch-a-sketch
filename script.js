@@ -45,7 +45,7 @@ function randomColor() {
 function drawCanvas() {
     container.style.height = height + 'px'
     container.style.width = width + 'px'
-    divSize = container.clientHeight / side
+    let divSize = container.clientHeight / side
     
     for (let i = 0; i < side * side; i++) {
         const div = document.createElement('div')
@@ -53,9 +53,8 @@ function drawCanvas() {
         div.style.width = divSize + 'px'
         div.style.opacity = 0
         div.addEventListener('mouseenter', () => {
-            let divColor = div.style.backgroundColor
             if (selectedColor == RANDOM) {
-                [ red, green, blue ] = randomColor()
+                let [ red, green, blue ] = randomColor()
                 div.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
             } else {
                 div.style.backgroundColor = selectedColor
@@ -70,7 +69,7 @@ function drawCanvas() {
 
 
 btn.onclick = () => {
-    newSide = parseInt(prompt('Sides: '))
+    let newSide = parseInt(prompt('Sides: '))
     if (isNaN(newSide) || newSide > 100) return
     side = newSide
     container.replaceChildren()
