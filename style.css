@@ -68,3 +68,7 @@ h1 {
     border: 1px solid grey;
     border-radius: 6px;
 }
+
+.active-color {
+    border: 2px solid black;
+}

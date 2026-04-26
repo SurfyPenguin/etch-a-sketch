@@ -26,6 +26,8 @@ function generatePalette() {
         div.setAttribute('class', 'palette-color')
         div.style.backgroundColor = primaryPalette[color]
         div.onclick = () => {
+            document.querySelector('.palette-color.active-color')?.classList.remove('active-color')
+            div.classList.add('active-color')
             selectedColor = div.style.backgroundColor
         }
         paletteContainer.appendChild(div)
