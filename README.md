@@ -11,7 +11,7 @@ This version of Etch-a-sketch implements the following:
 
 Whats not good:
 - Rushed quality code. (needs refactoring)
-- Colors only gets assigned once to the divs. It can't be overwritten when a different color is chosen.
+- ~~Colors only gets assigned once to the divs. It can't be overwritten when a different color is chosen.~~
 - No proper commits. (forgot to commit)
 
 __Submission on [The Odin Project](https://www.theodinproject.com/lessons/foundations-etch-a-sketch)__
