@@ -54,13 +54,11 @@ function drawCanvas() {
         div.style.opacity = 0
         div.addEventListener('mouseenter', () => {
             let divColor = div.style.backgroundColor
-            if (!divColor) {
-                if (selectedColor == RANDOM) {
-                    [ red, green, blue ] = randomColor()
-                    div.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
-                } else {
-                    div.style.backgroundColor = selectedColor
-                }
+            if (selectedColor == RANDOM) {
+                [ red, green, blue ] = randomColor()
+                div.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
+            } else {
+                div.style.backgroundColor = selectedColor
             }
             let currentOpacity = parseFloat(div.style.opacity)
             if (currentOpacity < 1) div.style.opacity = currentOpacity + 0.1
