@@ -55,7 +55,6 @@ function createPalette() {
     }
     
     paletteContainer.appendChild(fragment)
-    fragment.replaceChildren()
 
     for (const [mode, isActive] of Object.entries(PALETTE.MODES)) {
         const modeButton = document.createElement('button')
@@ -96,7 +95,7 @@ function createCanvas() {
         box.style.opacity = 0
 
         box.addEventListener('mouseenter', () => {
-            PALETTE.MODES.rainbow == true ? box.style.backgroundColor = getRandomColor() : box.style.backgroundColor = activeColor
+            PALETTE.MODES.rainbow ? box.style.backgroundColor = getRandomColor() : box.style.backgroundColor = activeColor
             PALETTE.MODES.shading ? box.style.opacity = parseFloat(box.style.opacity) + 0.1 : box.style.opacity = 1
         })
 
