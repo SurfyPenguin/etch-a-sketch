@@ -1,86 +1,135 @@
-const height = 600
-const width = 600
-const maxCanvasSide = 100
-const clearBtn = document.querySelector('.clear-btn')
+const MAX_CANVAS_SIZE = 100
+
 const btn = document.querySelector('.btn')
+const clearBtn = document.querySelector('.clear-btn')
+
 const container = document.getElementById('container')
 const paletteContainer = document.getElementById('select-color')
-const primaryPalette = {
-  Red: "#ff7272",
-  Orange: "#ffc75e",
-  Yellow: "#ffff7c",
-  Green: "#7eff7e",
-  Blue: "#6e6eff",
-  Purple: "#ff7eff",
-  Black: "#000000",
-  White: "#FFFFFF"
+const modesContainer = document.getElementById('modes-container')
+
+const minGridSize = 8
+const maxGridSize = 100
+
+// define colors
+const PALETTE = {
+    BASE: {
+        red: '#ff7272',
+        orange: '#ffc75e',
+        yellow: '#ffff7c',
+        green: '#7eff7e',
+        blue: '#6e6eff',
+        purple: '#ff7eff',
+        black: '#000000',
+        white: '#FFFFFF',
+    },
+
+    MODES: {
+        rainbow: false,
+        shading: true,
+    },
 }
-const RANDOM = 'random'
-let selectedColor = RANDOM
 
-let side = 16
+let canvasGridSize = 16
+let activeColor = PALETTE.BASE.black
+let activeSwatch = null
 
-function generatePalette() {
-    for (color in primaryPalette) {
-        const div = document.createElement('div')
-        div.setAttribute('class', 'palette-color')
-        div.style.backgroundColor = primaryPalette[color]
-        div.onclick = () => {
+function createPalette() {
+    const fragment = document.createDocumentFragment()
+
+    for (const [color, hex] of Object.entries(PALETTE.BASE)) {
+        const colorSwatch = document.createElement('div')
+        colorSwatch.classList.add('palette-color')
+        colorSwatch.style.backgroundColor = hex
+
+        colorSwatch.classList.toggle('active-color', (hex == activeColor))
+
+        colorSwatch.addEventListener('click', () => {
             document.querySelector('.palette-color.active-color')?.classList.remove('active-color')
-            div.classList.add('active-color')
-            selectedColor = div.style.backgroundColor
-        }
-        paletteContainer.appendChild(div)
-    }
-}
+            colorSwatch.classList.add('active-color')
 
-generatePalette()
-
-function randomColor() {
-    const maxRgbValue = 255
-    const red = Math.floor(Math.random() * (maxRgbValue + 1))
-    const green = Math.floor(Math.random() * (maxRgbValue + 1))
-    const blue = Math.floor(Math.random() * (maxRgbValue + 1))
-    return [red, green, blue]
-}
-
-function drawCanvas() {
-    container.style.height = height + 'px'
-    container.style.width = width + 'px'
-    let divSize = container.clientHeight / side
-    
-    for (let i = 0; i < side * side; i++) {
-        const div = document.createElement('div')
-        div.style.height = divSize + 'px'
-        div.style.width = divSize + 'px'
-        div.style.opacity = 0
-        div.addEventListener('mouseenter', () => {
-            if (selectedColor == RANDOM) {
-                let [ red, green, blue ] = randomColor()
-                div.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
-            } else {
-                div.style.backgroundColor = selectedColor
-            }
-            let currentOpacity = parseFloat(div.style.opacity)
-            if (currentOpacity < 1) div.style.opacity = currentOpacity + 0.1
+            activeSwatch = colorSwatch
+            activeColor = hex
         })
-        container.appendChild(div)
+
+        fragment.appendChild(colorSwatch)
+    }
+    
+    paletteContainer.appendChild(fragment)
+    fragment.replaceChildren()
+
+    for (const [mode, isActive] of Object.entries(PALETTE.MODES)) {
+        const modeButton = document.createElement('button')
+        const text = mode.toString()
+
+        modeButton.classList.add('mode-button')
+        modeButton.innerText = text.charAt(0).toUpperCase() + text.slice(1)
+
+        modeButton.classList.toggle('active-mode', PALETTE.MODES[mode])
+
+        modeButton.addEventListener('click', () => {
+            PALETTE.MODES[mode] = !PALETTE.MODES[mode]
+            modeButton.classList.toggle('active-mode', PALETTE.MODES[mode])
+        })
+        fragment.appendChild(modeButton)
+    }
+    modesContainer.appendChild(fragment)
+
+}
+
+function getRandomColor() {
+    return `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`   
+}
+
+function createCanvas() {
+    // get rendered height and width
+    const canvasHeight = container.clientHeight
+    const canvasWidth = container.clientWidth
+
+    const boxSideWidth = canvasHeight / canvasGridSize
+    const fragment = document.createDocumentFragment()
+    
+    for (let i = 0; i < canvasGridSize * canvasGridSize; i++) {
+        const box = document.createElement('div')
+
+        box.style.height = boxSideWidth + 'px'
+        box.style.width = boxSideWidth + 'px'
+        box.style.opacity = 0
+
+        box.addEventListener('mouseenter', () => {
+            PALETTE.MODES.rainbow == true ? box.style.backgroundColor = getRandomColor() : box.style.backgroundColor = activeColor
+            PALETTE.MODES.shading ? box.style.opacity = parseFloat(box.style.opacity) + 0.1 : box.style.opacity = 1
+        })
+
+        fragment.appendChild(box)
     }
 
+    container.appendChild(fragment)
+
 }
 
+function getInputSize() {
+    let input = parseInt(prompt('Size of canvas: ', canvasGridSize))
+    if (isNaN(input) || input < minGridSize || input > maxGridSize) {
+        alert(`Canvas size must be between ${minGridSize}-${maxGridSize}!`)
+        return
+    }
+    return input
+}
 
-btn.onclick = () => {
-    let newSide = parseInt(prompt('Sides: '))
-    if (isNaN(newSide) || newSide > 100) return
-    side = newSide
+function clearCanvas() {
     container.replaceChildren()
-    drawCanvas()
+    createCanvas()
 }
 
-clearBtn.onclick = () => {
-    container.replaceChildren()
-    drawCanvas()
-}
+btn.addEventListener('click', () => {
+    let size = getInputSize()
+    if (size) {
+        canvasGridSize = size
+        clearCanvas()
+    }
+})
 
-drawCanvas()
+clearBtn.addEventListener('click', clearCanvas)
+
+createCanvas()
+createPalette()
