@@ -73,7 +73,7 @@ h1 {
 }
 
 .palette-color.active-color {
-    border-width: 2px;
+    outline: 1px solid black;
     transform: scale(1.1);
 
 }
